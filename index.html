@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skull Casino</title>
+    <style>
+        body { background: #000; color: #4caf50; text-align: center; font-family: sans-serif; margin:0; padding:20px; }
+        .game-board { display: flex; justify-content: center; gap: 20px; margin: 50px 0; height: 150px; align-items: flex-end; position: relative; }
+        .skull { font-size: 60px; cursor: pointer; transition: 0.3s; z-index: 2; }
+        .lift { transform: translateY(-60px); }
+        .gem { font-size: 30px; position: absolute; bottom: 10px; display: none; z-index: 1; }
+        .btn { background: #4caf50; color: white; border: none; padding: 15px 30px; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>SKULL CASINO</h1>
+    <div id="status">Press Shuffle to Play</div>
+    <div class="game-board">
+        <div class="skull" id="s0" onclick="choose(0)">💀</div>
+        <div class="skull" id="s1" onclick="choose(1)">💀</div>
+        <div class="skull" id="s2" onclick="choose(2)">💀</div>
+        <div class="gem" id="gem">💎</div>
+    </div>
+    <button class="btn" onclick="start()">SHUFFLE</button>
+
+    <script>
+        let target = 1;
+        let active = false;
+        function start() {
+            active = true;
+            document.getElementById('gem').style.display = 'none';
+            document.querySelectorAll('.skull').forEach(s => {
+                s.classList.remove('lift');
+                s.style.animation = "shuffle 0.3s infinite";
+            });
+            setTimeout(() => {
+                document.querySelectorAll('.skull').forEach(s => s.style.animation = "");
+                target = Math.floor(Math.random() * 3);
+                active = false;
+                document.getElementById('status').innerText = "Pick a Skull!";
+            }, 1500);
+        }
+        function choose(id) {
+            if(active) return;
+            const skulls = document.querySelectorAll('.skull');
+            const gem = document.getElementById('gem');
+            skulls[id].classList.add('lift');
+            if(id === target) {
+                const pos = [ 'calc(50% - 80px)', '50%', 'calc(50% + 80px)' ];
+                gem.style.left = pos[target];
+                gem.style.display = 'block';
+                document.getElementById('status').innerText = "WIN: +360 RUB!";
+            } else {
+                document.getElementById('status').innerText = "TRY AGAIN!";
+            }
+            active = true;
+        }
+    </script>
+</body>
+</html>
